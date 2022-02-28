@@ -12,6 +12,6 @@ namespace CE
 
 		// FUNCTIONS
 	public:
-		I32 Run();
+		void Run();
 	};
 }

@@ -4,5 +4,6 @@ CE::Application Application;
 
 int main()
 {
-	return Application.Run();
+	Application.Run();
+	return 0;
 }
