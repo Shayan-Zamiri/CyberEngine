@@ -20,7 +20,7 @@ namespace CE
 		/* Initialize the library */
 		if (!glfwInit())
 		{
-			fprintf(stderr, "Error: could not start GLFW\n");
+			spdlog::error("Error: could not start GLFW");
 			return;
 		}
 
@@ -28,7 +28,7 @@ namespace CE
 		GLFWwindow* window = glfwCreateWindow(1920, 1080, "Hello World", nullptr, nullptr);
 		if (!window)
 		{
-			fprintf(stderr, "Error: could not open window with GLFW3\n");
+			spdlog::error("Error: could not open window with GLFW3");
 			glfwTerminate();
 			return;
 		}
@@ -38,15 +38,15 @@ namespace CE
 
 		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 		{
-			fprintf(stderr, "Error: Failed to initialize GLAD\n");
+			spdlog::error("Error: Failed to initialize GLAD");
 			return;
 		}
 
 		// get version info
 		const U8* Renderer = glGetString(GL_RENDERER);
 		const U8* Version = glGetString(GL_VERSION);
-		printf("Renderer: %s\n", Renderer);
-		printf("OpenGL version supported %s\n", Version);
+		spdlog::info("Renderer: {}", Renderer);
+		spdlog::info("OpenGL version supported {}", Version);
 
 		// tell GL to only draw onto a pixel if the shape is closer to the viewer
 		glEnable(GL_DEPTH_TEST); // enable depth-testing

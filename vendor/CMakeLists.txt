@@ -17,3 +17,11 @@ set(GLAD_INC_PATH "${GLAD_LIB_NAME}/include")
 add_library(${GLAD_LIB_NAME} STATIC "${GLAD_SRC_PATH}/glad.c")
 
 target_include_directories(${GLAD_LIB_NAME} PUBLIC "${GLAD_INC_PATH}")
+
+# spdlog
+set(SPDLOG_LIB_NAME "spdlog")
+set(GLAD_INC_PATH "${SPDLOG_LIB_NAME}/include")
+
+add_subdirectory(${SPDLOG_LIB_NAME})
+
+target_include_directories(${SPDLOG_LIB_NAME} PUBLIC "${GLAD_INC_PATH}")
