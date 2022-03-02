@@ -8,7 +8,8 @@ add_compile_definitions(GLFW_INCLUDE_NONE)
 set(HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/inc/Application.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/CEPCH.h"
 			     "${CMAKE_CURRENT_SOURCE_DIR}/inc/RenderManager.h"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/MemAllocator.h")
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/MemAllocator.h"
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/IManager.h")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp"

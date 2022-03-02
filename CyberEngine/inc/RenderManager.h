@@ -1,21 +1,23 @@
 #pragma once
 
+#include "IManager.h"
+
 namespace CE
 {
-	class RenderManager
+	class RenderManager : public IManager
 	{
 		// CTOR/DTOR & VIRTUAL FUNCTIONS
 	public:
 		RenderManager();
 
-		~RenderManager();
+		virtual ~RenderManager() override;
 
 		// FUNCTIONS
 	public:
-		void StartUp();
+		void StartUp() override;
+
+		void ShutDown() override;
 
 		void Render();
-
-		void ShutDown();
 	};
 }
