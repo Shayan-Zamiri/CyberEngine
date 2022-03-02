@@ -35,6 +35,4 @@ using I64_S = int_least64_t;
 
 using IMAX  = intmax_t;
 using UMAX  = uintmax_t;
-using VPTR  = uintptr_t; // unsigned int pointer to void
-
 

@@ -9,13 +9,15 @@ set(HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/inc/Application.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/CEPCH.h"
 			     "${CMAKE_CURRENT_SOURCE_DIR}/inc/RenderManager.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/MemAllocator.h"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/IManager.h")
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/IManager.h"
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/VertexBuffer.h")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/CEPCH.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/RenderManager.cpp"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/src/MemAllocator.cpp")
+				 "${CMAKE_CURRENT_SOURCE_DIR}/src/MemAllocator.cpp"
+				 "${CMAKE_CURRENT_SOURCE_DIR}/src/VertexBuffer.cpp")
 
 add_executable(CyberEngine ${SOURCE_FILES} ${HEADER_FILES})
 

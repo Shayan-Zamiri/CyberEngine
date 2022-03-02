@@ -12,7 +12,7 @@ namespace CE
 
 		virtual ~MemAllocator() = default;
 
-		virtual VPTR* Alloc() = 0;
+		virtual void* Alloc() = 0;
 
 		virtual void Free() = 0;
 	};

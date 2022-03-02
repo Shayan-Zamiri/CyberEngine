@@ -1,5 +1,6 @@
 #include "CEPCH.h"
 #include "RenderManager.h"
+#include "VertexBuffer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -56,17 +57,14 @@ namespace CE
 		constexpr float Vertices[] = {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 
 		// Vertex Buffer Object
-		U32 VBO = 0;
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices,GL_STATIC_DRAW);
+		const VertexBuffer VBO{Vertices,sizeof(Vertices)};
+		VBO.Bind();
 
 		// Vertex Attribute Object
 		U32 VAO = 0;
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 		// Vertex Shader
