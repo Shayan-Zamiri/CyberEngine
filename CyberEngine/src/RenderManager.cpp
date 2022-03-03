@@ -1,5 +1,8 @@
 #include "CEPCH.h"
 #include "RenderManager.h"
+
+#include "IndexBuffer.h"
+#include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -54,18 +57,22 @@ namespace CE
 		glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
 		// Triangle vertices
-		constexpr float Vertices[] = {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
+		constexpr float Vertices[] = {-0.5, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f};
+		constexpr U32 Indices[] = {0, 1, 2, 2, 3, 0};
 
 		// Vertex Buffer Object
-		const VertexBuffer VBO{Vertices,sizeof(Vertices)};
+		VertexBuffer VBO{Vertices, sizeof(Vertices)};
+		VBO.AddVBElement<float>(2);
 		VBO.Bind();
 
 		// Vertex Attribute Object
-		U32 VAO = 0;
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+		VertexArray VAO;
+		VAO.AddBuffer(VBO);
+		VAO.Bind();
+
+		// Index Buffer
+		IndexBuffer IB{Indices, 6};
+		IB.Bind();
 
 		// Vertex Shader
 		const char* VertexShader =
@@ -78,9 +85,9 @@ namespace CE
 		// Fragment Shader
 		const char* FragmentShader =
 			"#version 400\n"
-			"out vec4 frag_colour;"
+			"out vec4 frag_color;"
 			"void main () {"
-			" frag_colour = vec4 (0.2, 0.3, 0.6, 1.0);"
+			" frag_color = vec4 (0.2, 0.3, 0.6, 1.0);"
 			"}";
 
 		const U32 VS = glCreateShader(GL_VERTEX_SHADER);
@@ -95,17 +102,15 @@ namespace CE
 		glAttachShader(ShaderProgram, FS);
 		glAttachShader(ShaderProgram, VS);
 		glLinkProgram(ShaderProgram);
+		glUseProgram(ShaderProgram);
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
 			// wipe the drawing surface clear
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glUseProgram(ShaderProgram);
-			glBindVertexArray(VAO);
 
-			// draw points 0-3 from the currently bound VAO with current in-use shader
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawElements(GL_TRIANGLES, IB.GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// update other events like input handling
 			glfwPollEvents();

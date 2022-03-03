@@ -6,5 +6,6 @@
 
 #ifdef _DEBUG
 #include <iostream>
+#include <cassert>
 #endif
 
