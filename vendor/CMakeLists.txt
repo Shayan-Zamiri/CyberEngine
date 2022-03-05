@@ -20,8 +20,16 @@ target_include_directories(${GLAD_LIB_NAME} PUBLIC "${GLAD_INC_PATH}")
 
 # spdlog
 set(SPDLOG_LIB_NAME "spdlog")
-set(GLAD_INC_PATH "${SPDLOG_LIB_NAME}/include")
+set(SPDLOG_INC_PATH "${SPDLOG_LIB_NAME}/include")
 
 add_subdirectory(${SPDLOG_LIB_NAME})
 
-target_include_directories(${SPDLOG_LIB_NAME} PUBLIC "${GLAD_INC_PATH}")
+target_include_directories(${SPDLOG_LIB_NAME} PUBLIC "${SPDLOG_INC_PATH}")
+
+# Terathon Math
+set(TerathonMath_LIB_NAME "TerathonMath")
+set(TerathonMath_INC_PATH "${TerathonMath_LIB_NAME}")
+
+add_library(TerathonMath INTERFACE)
+
+target_include_directories(${TerathonMath_LIB_NAME} INTERFACE "${TerathonMath_INC_PATH}")

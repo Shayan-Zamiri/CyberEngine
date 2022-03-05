@@ -64,6 +64,8 @@ namespace CE
 	private:
 		U32 mRendererID;
 		U32 mStride;
+		U32 mSize;
+		const void* mData;
 		std::vector<VertexBufferElement> mElements;
 	};
 

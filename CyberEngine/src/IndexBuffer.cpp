@@ -7,11 +7,9 @@ namespace CE
 {
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
-	IndexBuffer::IndexBuffer(const U32* pData, U32 pCount) : mCount{pCount}
+	IndexBuffer::IndexBuffer(const U32* pData, U32 pCount) : mCount{pCount}, mData{pData}
 	{
 		glGenBuffers(1, &mRendererID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pCount * sizeof(unsigned int), pData, GL_STATIC_DRAW);
 	}
 
 	IndexBuffer::~IndexBuffer()
@@ -24,6 +22,7 @@ namespace CE
 	void IndexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mCount * sizeof(U32), mData, GL_STATIC_DRAW);
 	}
 
 	void IndexBuffer::UnBind() const

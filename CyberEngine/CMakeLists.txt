@@ -25,7 +25,7 @@ set(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp"
 
 add_executable(CyberEngine ${SOURCE_FILES} ${HEADER_FILES})
 
-target_link_libraries(CyberEngine PUBLIC glfw Glad OpenGL::GL spdlog::spdlog)
+target_link_libraries(CyberEngine PUBLIC glfw Glad OpenGL::GL spdlog::spdlog TerathonMath)
 
 target_include_directories(CyberEngine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc")
 

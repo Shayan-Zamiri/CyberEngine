@@ -6,11 +6,9 @@ namespace CE
 {
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
-	VertexBuffer::VertexBuffer(const void* pData, U32 pSize) : mRendererID{0}, mStride{0}
+	VertexBuffer::VertexBuffer(const void* pData, U32 pSize) : mRendererID{0}, mStride{0}, mSize{pSize}, mData{pData}
 	{
 		glGenBuffers(1, &mRendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
-		glBufferData(GL_ARRAY_BUFFER, pSize, pData, GL_STATIC_DRAW);
 	}
 
 	VertexBuffer::~VertexBuffer()
@@ -23,6 +21,7 @@ namespace CE
 	void VertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mRendererID);
+		glBufferData(GL_ARRAY_BUFFER, mSize, mData, GL_STATIC_DRAW);
 	}
 
 	void VertexBuffer::UnBind() const

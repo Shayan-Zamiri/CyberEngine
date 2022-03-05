@@ -24,5 +24,6 @@ namespace CE
 	private:
 		U32 mRendererID;
 		U32 mCount;
+		const U32* mData;
 	};
 }
