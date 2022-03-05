@@ -3,7 +3,6 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include "TSMatrix4D.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -28,6 +27,10 @@ namespace CE
 			return;
 		}
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 		/* Create a windowed mode window and its OpenGL context */
 		GLFWwindow* window = glfwCreateWindow(1920, 1080, "Hello World", nullptr, nullptr);
 		if (!window)
@@ -46,6 +49,11 @@ namespace CE
 			return;
 		}
 
+		glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+
 		// get version info
 		const U8* Renderer = glGetString(GL_RENDERER);
 		const U8* Version = glGetString(GL_VERSION);
@@ -57,18 +65,18 @@ namespace CE
 		glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
 		// Triangle vertices
-		constexpr float Vertices[] = {-0.5, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f};
+		constexpr float Vertices[] = {-0.5, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 		constexpr U32 Indices[] = {0, 1, 2, 2, 3, 0};
 
 		// Vertex Buffer Object
 		VertexBuffer VBO{Vertices, sizeof(Vertices)};
-		VBO.AddVBElement<float>(2);
+		VBO.AddVBElement<float>(3);
 		VBO.Bind();
 
 		// Vertex Attribute Object
 		VertexArray VAO;
-		VAO.AddBuffer(VBO);
 		VAO.Bind();
+		VAO.AddBuffer(VBO);
 
 		// Index Buffer
 		IndexBuffer IB{Indices, 6};

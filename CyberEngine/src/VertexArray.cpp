@@ -31,8 +31,6 @@ namespace CE
 
 	void VertexArray::AddBuffer(const VertexBuffer& pVB)
 	{
-		Bind();
-		pVB.Bind();
 		const auto& Elements = pVB.GetElements();
 		U32 Offset = 0;
 		for (U32 i = 0; i < Elements.size(); i++)
