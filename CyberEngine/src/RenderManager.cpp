@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace CE
 {
@@ -27,6 +28,7 @@ namespace CE
 			return;
 		}
 
+		glfwWindowHint(GLFW_SAMPLES, 16);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -40,8 +42,18 @@ namespace CE
 			return;
 		}
 
-		/* Make the window's context current */
+		// Make the window's context current
 		glfwMakeContextCurrent(window);
+
+		// Ensure we can capture the escape key being pressed below
+		glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+		// Hide the mouse and enable unlimited mouvement
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		// Set the mouse at the center of the screen
+		glfwPollEvents();
+		glfwSetCursorPos(window, 1920.0f / 2, 1080.0f / 2);
 
 		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 		{
@@ -61,8 +73,8 @@ namespace CE
 		spdlog::info("OpenGL version supported {}", Version);
 
 		// tell GL to only draw onto a pixel if the shape is closer to the viewer
-		glEnable(GL_DEPTH_TEST); // enable depth-testing
-		glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 
 		// Triangle vertices
 		constexpr float Vertices[] = {-0.5, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
@@ -82,12 +94,31 @@ namespace CE
 		IndexBuffer IB{Indices, 6};
 		IB.Bind();
 
+		// Projection Matrix
+		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+
+		// Camera Matrix
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+			glm::vec3(0, 0, 0), // and looks at the origin
+			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		);
+
+		// Model Matrix : an identity matrix (model will be at the origin)
+		glm::mat4 Model = glm::mat4(1.0f);
+
+		// Model View Projection Matrix
+		glm::mat4 mvp = Projection * View * Model;
+
 		// Vertex Shader
 		const char* VertexShader =
 			"#version 400\n"
-			"in vec3 vp;"
-			"void main () {"
-			" gl_Position = vec4 (vp, 1.0);"
+			"layout(location = 0)"
+			"in vec3 VP;"
+			"uniform mat4 MVP;"
+			"void main()"
+			"{"
+			"	gl_Position = MVP * vec4(VP, 1);"
 			"}";
 
 		// Fragment Shader
@@ -111,6 +142,13 @@ namespace CE
 		glAttachShader(ShaderProgram, VS);
 		glLinkProgram(ShaderProgram);
 		glUseProgram(ShaderProgram);
+
+		// Get a handle for our "MVP" uniform
+		// Only during the initialisation
+		GLuint MatrixID = glGetUniformLocation(ShaderProgram, "MVP");
+
+		// Send our transformation to the currently bound shader, in the "MVP" uniform
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))

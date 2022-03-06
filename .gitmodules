@@ -7,3 +7,6 @@
 [submodule "vendor/TerathonMath"]
 	path = vendor/TerathonMath
 	url = https://github.com/EricLengyel/Terathon-Math-Library.git
+[submodule "vendor/glm"]
+	path = vendor/glm
+	url = https://github.com/g-truc/glm.git

@@ -29,14 +29,14 @@ namespace CE
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::AddBuffer(const VertexBuffer& pVB)
+	void VertexArray::AddBuffer(const VertexBuffer& pVBO)
 	{
-		const auto& Elements = pVB.GetElements();
+		const auto& Elements = pVBO.GetElements();
 		U32 Offset = 0;
 		for (U32 i = 0; i < Elements.size(); i++)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, Elements[i].mCount, Elements[i].mType, Elements[i].mNormalized, pVB.GetStride()
+			glVertexAttribPointer(i, Elements[i].mCount, Elements[i].mType, Elements[i].mNormalized, pVBO.GetStride()
 			                    , reinterpret_cast<const void*>(Offset));
 			Offset += Elements[i].mCount * VertexBufferElement::GetSizeOfType(Elements[i].mType);
 		}

@@ -23,9 +23,10 @@ set(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/VertexArray.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/IndexBuffer.cpp")
 
+
 add_executable(CyberEngine ${SOURCE_FILES} ${HEADER_FILES})
 
-target_link_libraries(CyberEngine PUBLIC glfw Glad OpenGL::GL spdlog::spdlog TerathonMath)
+target_link_libraries(CyberEngine PUBLIC glfw Glad OpenGL::GL spdlog::spdlog TerathonMath glm::glm)
 
 target_include_directories(CyberEngine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc")
 

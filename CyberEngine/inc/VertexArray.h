@@ -20,7 +20,7 @@ namespace CE
 
 		void UnBind() const;
 
-		void AddBuffer(const VertexBuffer& pVB);
+		void AddBuffer(const VertexBuffer& pVBO);
 
 		// PROPERTIES
 	private:
