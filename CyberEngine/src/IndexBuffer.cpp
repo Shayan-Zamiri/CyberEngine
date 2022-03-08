@@ -1,13 +1,11 @@
 #include "CEPCH.h"
 #include "IndexBuffer.h"
 
-#include "glad/glad.h"
-
 namespace CE
 {
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
-	IndexBuffer::IndexBuffer(const U32* pData, U32 pCount) : mCount{pCount}, mData{pData}
+	IndexBuffer::IndexBuffer()
 	{
 		glGenBuffers(1, &mRendererID);
 	}
@@ -19,10 +17,16 @@ namespace CE
 
 	// FUNCTIONS
 
+	void IndexBuffer::FillBuffer(const GLuint* pData, GLuint pCount)
+	{
+		mCount = pCount;
+		Bind();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pCount * sizeof(GLuint), pData,GL_STATIC_DRAW);
+	}
+
 	void IndexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mCount * sizeof(U32), mData, GL_STATIC_DRAW);
 	}
 
 	void IndexBuffer::UnBind() const

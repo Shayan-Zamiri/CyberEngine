@@ -8,11 +8,11 @@ namespace CE
 {
 	struct VertexBufferElement
 	{
-		unsigned int mCount;
-		unsigned int mType;
-		unsigned char mNormalized;
+		GLint mCount;
+		GLenum mType;
+		GLboolean mNormalized;
 
-		static U32 GetSizeOfType(U32 type)
+		static GLenum GetSizeOfType(GLenum type)
 		{
 			switch (type)
 			{
@@ -32,61 +32,62 @@ namespace CE
 	{
 		// CTOR/DTOR & VIRTUAL FUNCTIONS
 	public:
-		VertexBuffer(const void* pData, U32 pSize);
+		VertexBuffer();
 
 		virtual ~VertexBuffer();
 
 		// FUNCTIONS
 	public:
+		static void UnBind();
+
+		void FillBuffer(const void* pData, GLsizei pSize);
+
 		void Bind() const;
 
-		void UnBind() const;
-
 		template <typename T>
-		void AddVBElement(U32 pCount);
+		void AddVBElement(GLsizei pCount);
 
 		template <>
-		void AddVBElement<float>(U32 pCount);
+		void AddVBElement<GLfloat>(GLsizei pCount);
 
 		template <>
-		void AddVBElement<U32>(U32 pCount);
+		void AddVBElement<GLuint>(GLsizei pCount);
 
 		template <>
-		void AddVBElement<signed char>(U32 pCount);
+		void AddVBElement<GLchar>(GLsizei pCount);
 
 		// GETTERS & SETTERS
 	public:
-		U32 GetStride() const;
+		GLsizei GetStride() const { return mStride; }
 
-		const std::vector<VertexBufferElement>& GetElements() const;
+		const std::vector<VertexBufferElement>& GetElements() const { return mElements; }
 
 		// PROPERTIES
 	private:
-		U32 mRendererID;
-		U32 mStride;
-		U32 mSize;
-		const void* mData;
+		GLuint mRendererID;
+		GLsizei mStride;
+		GLsizei mSize;
 		std::vector<VertexBufferElement> mElements;
 	};
 
 	// TEMPLATES
 
 	template <>
-	void VertexBuffer::AddVBElement<float>(U32 pCount)
+	void VertexBuffer::AddVBElement<GLfloat>(GLsizei pCount)
 	{
 		mElements.push_back({pCount,GL_FLOAT,GL_FALSE});
 		mStride += pCount * VertexBufferElement::GetSizeOfType(GL_FLOAT);
 	}
 
 	template <>
-	void VertexBuffer::AddVBElement<unsigned>(U32 pCount)
+	void VertexBuffer::AddVBElement<GLuint>(GLsizei pCount)
 	{
 		mElements.push_back({pCount,GL_UNSIGNED_INT,GL_FALSE});
 		mStride += pCount * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT);
 	}
 
 	template <>
-	void VertexBuffer::AddVBElement<signed char>(U32 pCount)
+	void VertexBuffer::AddVBElement<GLchar>(GLsizei pCount)
 	{
 		mElements.push_back({pCount,GL_UNSIGNED_BYTE,GL_TRUE});
 		mStride += pCount * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);

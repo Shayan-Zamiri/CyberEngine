@@ -1,10 +1,16 @@
 #include "CEPCH.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include "glad/glad.h"
 
 namespace CE
 {
+	// STATICS
+
+	void VertexArray::UnBind()
+	{
+		glBindVertexArray(0);
+	}
+
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
 	VertexArray::VertexArray()
@@ -24,18 +30,14 @@ namespace CE
 		glBindVertexArray(mRendererID);
 	}
 
-	void VertexArray::UnBind() const
+	void VertexArray::AddVBO(const VertexBuffer& pVBO) const
 	{
-		glBindVertexArray(0);
-	}
-
-	void VertexArray::AddBuffer(const VertexBuffer& pVBO)
-	{
+		Bind();
 		const auto& Elements = pVBO.GetElements();
-		U32 Offset = 0;
-		for (U32 i = 0; i < Elements.size(); i++)
+		GLuint Offset = 0;
+		for (GLuint i = 0; i < Elements.size(); i++)
 		{
-			glEnableVertexAttribArray(i);
+			glEnableVertexArrayAttrib(mRendererID, i);
 			glVertexAttribPointer(i, Elements[i].mCount, Elements[i].mType, Elements[i].mNormalized, pVBO.GetStride()
 			                    , reinterpret_cast<const void*>(Offset));
 			Offset += Elements[i].mCount * VertexBufferElement::GetSizeOfType(Elements[i].mType);

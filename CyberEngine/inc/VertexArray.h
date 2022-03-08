@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CEPCH.h"
+#include "glad/glad.h"
 
 namespace CE
 {
@@ -16,14 +17,14 @@ namespace CE
 
 		// FUNCTIONS
 	public:
+		static void UnBind();
+
 		void Bind() const;
 
-		void UnBind() const;
-
-		void AddBuffer(const VertexBuffer& pVBO);
+		void AddVBO(const VertexBuffer& pVBO) const;
 
 		// PROPERTIES
 	private:
-		U32 mRendererID;
+		GLuint mRendererID;
 	};
 }

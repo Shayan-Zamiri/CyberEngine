@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CEPCH.h"
+#include "glad/glad.h"
 
 namespace CE
 {
@@ -8,22 +9,25 @@ namespace CE
 	{
 	public:
 		//CTOR & DTOR
-		IndexBuffer(const U32* pData, U32 pCount);
+		IndexBuffer();
 
 		~IndexBuffer();
 
 		//FUNCTIONS
+	public:
+		void FillBuffer(const GLuint* pData, GLuint pCount);
+
 		void Bind() const;
 
 		void UnBind() const;
 
 		//GETTERS & SETTERS
-		U32 GetCount() const { return mCount; }
+	public:
+		GLuint GetCount() const { return mCount; }
 
 		//PROPERTIES
 	private:
-		U32 mRendererID;
-		U32 mCount;
-		const U32* mData;
+		GLuint mRendererID;
+		GLuint mCount;
 	};
 }

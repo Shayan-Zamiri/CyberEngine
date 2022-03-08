@@ -1,9 +1,11 @@
 #include "CEPCH.h"
 #include "RenderManager.h"
+#include "GUIManager.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include "glad/glad.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -17,44 +19,9 @@ namespace CE
 
 	// FUNCTIONS
 
-	void RenderManager::StartUp() { }
-
-	void RenderManager::Render()
+	void RenderManager::StartUp()
 	{
-		/* Initialize the library */
-		if (!glfwInit())
-		{
-			spdlog::error("Error: could not start GLFW");
-			return;
-		}
-
-		glfwWindowHint(GLFW_SAMPLES, 16);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		/* Create a windowed mode window and its OpenGL context */
-		GLFWwindow* window = glfwCreateWindow(1920, 1080, "Hello World", nullptr, nullptr);
-		if (!window)
-		{
-			spdlog::error("Error: could not open window with GLFW3");
-			glfwTerminate();
-			return;
-		}
-
-		// Make the window's context current
-		glfwMakeContextCurrent(window);
-
-		// Ensure we can capture the escape key being pressed below
-		glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-		// Hide the mouse and enable unlimited mouvement
-		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-		// Set the mouse at the center of the screen
-		glfwPollEvents();
-		glfwSetCursorPos(window, 1920.0f / 2, 1080.0f / 2);
-
+		// Initialize GLAD
 		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 		{
 			spdlog::error("Error: Failed to initialize GLAD");
@@ -66,32 +33,44 @@ namespace CE
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
 
+		// Setup Platform/Renderer backend
+		mGLSLVersion = "#version 460";
+		ImGui_ImplGlfw_InitForOpenGL(gGUIManager.GetGLFWWindow(), true);
+		ImGui_ImplOpenGL3_Init(mGLSLVersion.c_str());
+
 		// get version info
-		const U8* Renderer = glGetString(GL_RENDERER);
-		const U8* Version = glGetString(GL_VERSION);
-		spdlog::info("Renderer: {}", Renderer);
-		spdlog::info("OpenGL version supported {}", Version);
+		mRendererName = glGetString(GL_RENDERER);
+		mOpenGLVersion = glGetString(GL_VERSION);
+		spdlog::info("Renderer: {}", mRendererName);
+		spdlog::info("OpenGL version supported {}", mOpenGLVersion);
 
 		// tell GL to only draw onto a pixel if the shape is closer to the viewer
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
+		mClearColor = glm::vec4{0.45f, 0.55f, 0.60f, 1.00f};
+	}
+
+	void RenderManager::Render()
+	{
 		// Triangle vertices
 		constexpr float Vertices[] = {-0.5, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 		constexpr U32 Indices[] = {0, 1, 2, 2, 3, 0};
 
 		// Vertex Buffer Object
-		VertexBuffer VBO{Vertices, sizeof(Vertices)};
-		VBO.AddVBElement<float>(3);
+		VertexBuffer VBO{};
 		VBO.Bind();
+		VBO.FillBuffer(Vertices, sizeof(Vertices));
+		VBO.AddVBElement<float>(3);
 
 		// Vertex Attribute Object
-		VertexArray VAO;
+		VertexArray VAO{};
 		VAO.Bind();
-		VAO.AddBuffer(VBO);
+		VAO.AddVBO(VBO);
 
 		// Index Buffer
-		IndexBuffer IB{Indices, 6};
+		IndexBuffer IB{};
+		IB.FillBuffer(Indices, 6);
 		IB.Bind();
 
 		// Projection Matrix
@@ -105,7 +84,7 @@ namespace CE
 		);
 
 		// Model Matrix : an identity matrix (model will be at the origin)
-		glm::mat4 Model = glm::mat4(1.0f);
+		auto Model = glm::mat4(1.0f);
 
 		// Model View Projection Matrix
 		glm::mat4 mvp = Projection * View * Model;
@@ -129,15 +108,15 @@ namespace CE
 			" frag_color = vec4 (0.2, 0.3, 0.6, 1.0);"
 			"}";
 
-		const U32 VS = glCreateShader(GL_VERTEX_SHADER);
+		const GLuint VS = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(VS, 1, &VertexShader, nullptr);
 		glCompileShader(VS);
 
-		const U32 FS = glCreateShader(GL_FRAGMENT_SHADER);
+		const GLuint FS = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(FS, 1, &FragmentShader, nullptr);
 		glCompileShader(FS);
 
-		const U32 ShaderProgram = glCreateProgram();
+		const GLuint ShaderProgram = glCreateProgram();
 		glAttachShader(ShaderProgram, FS);
 		glAttachShader(ShaderProgram, VS);
 		glLinkProgram(ShaderProgram);
@@ -150,22 +129,21 @@ namespace CE
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
-		/* Loop until the user closes the window */
-		while (!glfwWindowShouldClose(window))
-		{
-			// wipe the drawing surface clear
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Rendering
+		ImGui::Render();
+		I32 Width, Height;
+		glfwGetFramebufferSize(gGUIManager.GetGLFWWindow(), &Width, &Height);
+		gGUIManager.SetDisplayWidth(Width);
+		gGUIManager.SetDisplayHeight(Height);
 
-			glDrawElements(GL_TRIANGLES, IB.GetCount(), GL_UNSIGNED_INT, nullptr);
+		glViewport(0, 0, Width, Height);
+		glClearColor(mClearColor.x, mClearColor.y, mClearColor.z, mClearColor.w);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glDrawElements(GL_TRIANGLES, IB.GetCount(), GL_UNSIGNED_INT, nullptr);
 
-			// update other events like input handling
-			glfwPollEvents();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			// put the stuff we've been drawing onto the display
-			glfwSwapBuffers(window);
-		}
-
-		glfwTerminate();
+		glfwSwapBuffers(gGUIManager.GetGLFWWindow());
 	}
 
 	void RenderManager::ShutDown() { }

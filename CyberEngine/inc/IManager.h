@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CEPCH.h"
+
 namespace CE
 {
 	class IManager
