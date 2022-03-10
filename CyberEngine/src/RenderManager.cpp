@@ -8,6 +8,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "FileManager.h"
 
 namespace CE
 {
@@ -49,10 +50,41 @@ namespace CE
 		glDepthFunc(GL_LESS);
 
 		mClearColor = glm::vec4{0.45f, 0.55f, 0.60f, 1.00f};
+		mObjectColor = glm::vec4{0.2f, 0.7f, 0.3f, 1.0f};
+		mWorld = glm::vec3{4.0f, 3.0f, 3.0f};
+		mOrigin = glm::vec3{0.0f, 0.0f, 0.0f};
+
+		// Shaders
+		const std::string FragmentShader = FileManager::FileToString("../../../../Shaders/FragmentShader.glsl");
+		const std::string VertexShader = FileManager::FileToString("../../../../Shaders/VertexShader.glsl");
+		mShader = std::make_unique<Shader>(VertexShader, FragmentShader);
+		mShader->Compile();
+		mShader->Link();
+		mShader->Bind();
 	}
 
 	void RenderManager::Render()
 	{
+		// Projection Matrix
+		const glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+
+		// Camera Matrix
+		const glm::mat4 View = glm::lookAt(
+			mWorld,            // Camera is at (4,3,3), in World Space
+			mOrigin,           // and looks at the origin
+			glm::vec3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
+		);
+
+		// Model Matrix : an identity matrix (model will be at the origin)
+		const glm::mat4 Model = glm::mat4(1.0f);
+
+		// Model View Projection Matrix
+		const glm::mat4 MVPMatrix = Projection * View * Model;
+
+		// Send our transformation to the currently bound shader, in the "MVP" uniform
+		mShader->SetUniformMat4f("u_MVP", MVPMatrix);
+		mShader->SetUniform4f("u_Color", mObjectColor.x, mObjectColor.y, mObjectColor.z, mObjectColor.w);
+
 		// Triangle vertices
 		constexpr float Vertices[] = {-0.5, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 		constexpr U32 Indices[] = {0, 1, 2, 2, 3, 0};
@@ -72,62 +104,6 @@ namespace CE
 		IndexBuffer IB{};
 		IB.FillBuffer(Indices, 6);
 		IB.Bind();
-
-		// Projection Matrix
-		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
-
-		// Camera Matrix
-		glm::mat4 View = glm::lookAt(
-			glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-			glm::vec3(0, 0, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-		);
-
-		// Model Matrix : an identity matrix (model will be at the origin)
-		auto Model = glm::mat4(1.0f);
-
-		// Model View Projection Matrix
-		glm::mat4 mvp = Projection * View * Model;
-
-		// Vertex Shader
-		const char* VertexShader =
-			"#version 400\n"
-			"layout(location = 0)"
-			"in vec3 VP;"
-			"uniform mat4 MVP;"
-			"void main()"
-			"{"
-			"	gl_Position = MVP * vec4(VP, 1);"
-			"}";
-
-		// Fragment Shader
-		const char* FragmentShader =
-			"#version 400\n"
-			"out vec4 frag_color;"
-			"void main () {"
-			" frag_color = vec4 (0.2, 0.3, 0.6, 1.0);"
-			"}";
-
-		const GLuint VS = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(VS, 1, &VertexShader, nullptr);
-		glCompileShader(VS);
-
-		const GLuint FS = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(FS, 1, &FragmentShader, nullptr);
-		glCompileShader(FS);
-
-		const GLuint ShaderProgram = glCreateProgram();
-		glAttachShader(ShaderProgram, FS);
-		glAttachShader(ShaderProgram, VS);
-		glLinkProgram(ShaderProgram);
-		glUseProgram(ShaderProgram);
-
-		// Get a handle for our "MVP" uniform
-		// Only during the initialisation
-		GLuint MatrixID = glGetUniformLocation(ShaderProgram, "MVP");
-
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
 		// Rendering
 		ImGui::Render();

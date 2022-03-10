@@ -1,5 +1,6 @@
 #include "CEPCH.h"
 #include "Application.h"
+#include "FileManager.h"
 #include "GUIManager.h"
 #include "RenderManager.h"
 
@@ -9,11 +10,13 @@ namespace CE
 
 	RenderManager gRenderManager;
 	GUIManager gGUIManager;
+	FileManager gFileManager;
 
 	// FUNCTIONS
 
 	void Application::Run()
 	{
+		gFileManager.StartUp();
 		gGUIManager.StartUp();
 		gRenderManager.StartUp();
 
@@ -25,5 +28,6 @@ namespace CE
 
 		gRenderManager.ShutDown();
 		gGUIManager.ShutDown();
+		gFileManager.ShutDown();
 	}
 }

@@ -4,6 +4,7 @@
 #include "IManager.h"
 #include "vec4.hpp"
 #include "glad/glad.h"
+#include "Shader.h"
 
 namespace CE
 {
@@ -30,11 +31,16 @@ namespace CE
 		void SetClearColor(const glm::vec4& pClearColor) { mClearColor = pClearColor; }
 
 		// PROPERTIES
+	public:
+		glm::vec3 mWorld;
+		glm::vec3 mOrigin;
+		glm::vec4 mClearColor;
+		glm::vec4 mObjectColor;
 	private:
 		std::string mGLSLVersion;
 		const GLubyte* mRendererName;
 		const GLubyte* mOpenGLVersion;
-		glm::vec4 mClearColor;
+		std::unique_ptr<Shader> mShader;
 	};
 
 	extern RenderManager gRenderManager;

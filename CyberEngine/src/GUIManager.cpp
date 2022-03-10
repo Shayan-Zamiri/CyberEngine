@@ -86,9 +86,10 @@ namespace CE
 		{
 			ImGui::Begin("Setup background color"); // Create a window called "Hello, world!" and append into it.
 
-			static glm::vec4 ClearColor = gRenderManager.GetClearColor();;
-			ImGui::ColorEdit3("Clear Color", reinterpret_cast<float*>(&ClearColor));
-			gRenderManager.SetClearColor(ClearColor);
+			ImGui::ColorEdit3("Clear Color", reinterpret_cast<float*>(&gRenderManager.mClearColor));
+			ImGui::ColorEdit3("Object Color", reinterpret_cast<float*>(&gRenderManager.mObjectColor));
+			ImGui::DragFloat3("World:",&gRenderManager.mWorld[0]);
+			ImGui::DragFloat3("Origin:",&gRenderManager.mOrigin[0]);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate
 			          , ImGui::GetIO().Framerate);
