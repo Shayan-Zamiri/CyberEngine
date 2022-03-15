@@ -15,19 +15,20 @@ set(HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/inc/Application.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/IndexBuffer.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/GUIManager.h"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/Shader.h"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/FileManager.h")
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/FileManager.h"
+				 "${CMAKE_CURRENT_SOURCE_DIR}/inc/Camera.h")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/Application.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/CEPCH.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/RenderManager.cpp"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/src/MemAllocator.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/VertexBuffer.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/VertexArray.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/IndexBuffer.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/GUIManager.cpp"
 				 "${CMAKE_CURRENT_SOURCE_DIR}/src/Shader.cpp"
-				 "${CMAKE_CURRENT_SOURCE_DIR}/src/FileManager.cpp")
+				 "${CMAKE_CURRENT_SOURCE_DIR}/src/FileManager.cpp"
+				 "${CMAKE_CURRENT_SOURCE_DIR}/src/Camera.cpp")
 
 
 add_executable(CyberEngine ${SOURCE_FILES} ${HEADER_FILES})

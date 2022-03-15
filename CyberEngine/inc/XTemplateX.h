@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "CETypes.h"
+
 namespace CE
 {
 	class XTEMPLATEX

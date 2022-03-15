@@ -1,7 +1,12 @@
+/* Copyright (C) 2022 Shayan Zamiri <shayan.zamiri@gmail.com> - All Rights Reserved
+ * You may use, distribute and modify this code under the terms of the MIT license.
+ * You should have received a copy of the MIT license with this file. */
+
 #include "CEPCH.h"
-#include "GUIManager.h"
-#include "imgui.h"
 #include "RenderManager.h"
+#include "GUIManager.h"
+#include "Camera.h"
+#include "imgui.h"
 #include "glm/glm.hpp"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -25,7 +30,9 @@ namespace CE
 	{
 		glfwSetErrorCallback(GlFWErrorCallback);
 		if (!glfwInit())
+		{
 			return;
+		}
 
 		glfwWindowHint(GLFW_SAMPLES, 16);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -37,7 +44,9 @@ namespace CE
 		mDisplayHeight = 720;
 		mGLFWWindow = glfwCreateWindow(mDisplayWidth, mDisplayHeight, "Cyber Engine", nullptr, nullptr);
 		if (mGLFWWindow == nullptr)
+		{
 			return;
+		}
 		glfwMakeContextCurrent(mGLFWWindow);
 
 		// Enable vsync
@@ -52,6 +61,13 @@ namespace CE
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
+
+		// Default Values
+		mClearColor = glm::vec4{0.3f, 0.4f, 0.7f, 1.0f};
+		mObjectColor = glm::vec4{0.7f, 0.4f, 0.3f, 1.0f};
+		mCameraPosition = glm::vec3{0.0f, 0.0f, 0.0f};
+		mCameraPitch = 0.0f;
+		mCameraYaw = Camera::sDefaultYaw;
 	}
 
 	void GUIManager::ShutDown()
@@ -86,10 +102,11 @@ namespace CE
 		{
 			ImGui::Begin("Setup background color"); // Create a window called "Hello, world!" and append into it.
 
-			ImGui::ColorEdit3("Clear Color", reinterpret_cast<float*>(&gRenderManager.mClearColor));
-			ImGui::ColorEdit3("Object Color", reinterpret_cast<float*>(&gRenderManager.mObjectColor));
-			ImGui::DragFloat3("World:",&gRenderManager.mWorld[0]);
-			ImGui::DragFloat3("Origin:",&gRenderManager.mOrigin[0]);
+			ImGui::ColorEdit4("Clear Color", reinterpret_cast<float*>(&mClearColor));
+			ImGui::ColorEdit4("Object Color", reinterpret_cast<float*>(&mObjectColor));
+			ImGui::DragFloat3("Camera Position:", &mCameraPosition[0]);
+			ImGui::DragFloat("Camera Pitch:", &mCameraPitch, 0.5f, -90.0f, 90.0f);
+			ImGui::DragFloat("Camera Yaw:", &mCameraYaw, 0.5f, 360.0f, 360.0f);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate
 			          , ImGui::GetIO().Framerate);

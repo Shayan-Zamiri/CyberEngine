@@ -1,13 +1,22 @@
+/* Copyright (C) 2022 Shayan Zamiri <shayan.zamiri@gmail.com> - All Rights Reserved
+ * You may use, distribute and modify this code under the terms of the MIT license.
+ * You should have received a copy of the MIT license with this file. */
+
 #pragma once
 
-#include "CEPCH.h"
+#include "CETypes.h"
 #include "IManager.h"
 #include "vec4.hpp"
 #include "glad/glad.h"
-#include "Shader.h"
 
 namespace CE
 {
+	class VertexArray;
+	class VertexBuffer;
+	class IndexBuffer;
+	class Shader;
+	class Camera;
+
 	class RenderManager : public IManager
 	{
 		// CTOR/DTOR & VIRTUAL FUNCTIONS
@@ -31,16 +40,17 @@ namespace CE
 		void SetClearColor(const glm::vec4& pClearColor) { mClearColor = pClearColor; }
 
 		// PROPERTIES
-	public:
-		glm::vec3 mWorld;
-		glm::vec3 mOrigin;
-		glm::vec4 mClearColor;
-		glm::vec4 mObjectColor;
 	private:
-		std::string mGLSLVersion;
 		const GLubyte* mRendererName;
 		const GLubyte* mOpenGLVersion;
 		std::unique_ptr<Shader> mShader;
+		std::unique_ptr<Camera> mCamera;
+		std::unique_ptr<VertexArray> mVAO;
+		std::unique_ptr<VertexBuffer> mVBO;
+		std::unique_ptr<IndexBuffer> mIBO;
+		std::string mGLSLVersion;
+		glm::vec4 mClearColor;
+		glm::vec4 mObjectColor;
 	};
 
 	extern RenderManager gRenderManager;

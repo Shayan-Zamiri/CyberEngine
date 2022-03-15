@@ -1,14 +1,20 @@
+/* Copyright (C) 2022 Shayan Zamiri <shayan.zamiri@gmail.com> - All Rights Reserved
+ * You may use, distribute and modify this code under the terms of the MIT license.
+ * You should have received a copy of the MIT license with this file. */
+
 #include "CEPCH.h"
 #include "RenderManager.h"
+#include "Camera.h"
 #include "GUIManager.h"
+#include "Shader.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "FileManager.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "FileManager.h"
 
 namespace CE
 {
@@ -39,7 +45,7 @@ namespace CE
 		ImGui_ImplGlfw_InitForOpenGL(gGUIManager.GetGLFWWindow(), true);
 		ImGui_ImplOpenGL3_Init(mGLSLVersion.c_str());
 
-		// get version info
+		// Get version info
 		mRendererName = glGetString(GL_RENDERER);
 		mOpenGLVersion = glGetString(GL_VERSION);
 		spdlog::info("Renderer: {}", mRendererName);
@@ -49,10 +55,12 @@ namespace CE
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
+		// Don't draw back-face of triangles
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
+
 		mClearColor = glm::vec4{0.45f, 0.55f, 0.60f, 1.00f};
 		mObjectColor = glm::vec4{0.2f, 0.7f, 0.3f, 1.0f};
-		mWorld = glm::vec3{4.0f, 3.0f, 3.0f};
-		mOrigin = glm::vec3{0.0f, 0.0f, 0.0f};
 
 		// Shaders
 		const std::string FragmentShader = FileManager::FileToString("../../../../Shaders/FragmentShader.glsl");
@@ -61,49 +69,122 @@ namespace CE
 		mShader->Compile();
 		mShader->Link();
 		mShader->Bind();
+
+		// Camera
+		mCamera = std::make_unique<Camera>();
+
+		constexpr GLfloat Vertices[] = {
+			// front
+			-1.0
+		  , -1.0
+		  , 1.0
+		  , 1.0
+		  , -1.0
+		  , 1.0
+		  , 1.0
+		  , 1.0
+		  , 1.0
+		  , -1.0
+		  , 1.0
+		  , 1.0
+		   ,
+			// back
+			-1.0
+		  , -1.0
+		  , -1.0
+		  , 1.0
+		  , -1.0
+		  , -1.0
+		  , 1.0
+		  , 1.0
+		  , -1.0
+		  , -1.0
+		  , 1.0
+		  , -1.0
+		};
+
+		constexpr GLuint Indices[] = {
+			// front
+			0
+		  , 1
+		  , 2
+		  , 2
+		  , 3
+		  , 0
+		   ,
+			// right
+			1
+		  , 5
+		  , 6
+		  , 6
+		  , 2
+		  , 1
+		   ,
+			// back
+			7
+		  , 6
+		  , 5
+		  , 5
+		  , 4
+		  , 7
+		   ,
+			// left
+			4
+		  , 0
+		  , 3
+		  , 3
+		  , 7
+		  , 4
+		   ,
+			// bottom
+			4
+		  , 5
+		  , 1
+		  , 1
+		  , 0
+		  , 4
+		   ,
+			// top
+			3
+		  , 2
+		  , 6
+		  , 6
+		  , 7
+		  , 3
+		};
+
+		// Vertex Buffer Object
+		mVBO = std::make_unique<VertexBuffer>();
+		mVBO->Bind();
+		mVBO->FillBuffer(Vertices, sizeof(Vertices));
+		mVBO->AddVBElement<float>(3);
+
+		// Vertex Attribute Object
+		mVAO = std::make_unique<VertexArray>();
+		mVAO->Bind();
+		mVAO->AddVBO(*mVBO);
+
+		// Index Buffer Object
+		mIBO = std::make_unique<IndexBuffer>();
+		mIBO->FillBuffer(Indices, 36);
+		mIBO->Bind();
 	}
 
 	void RenderManager::Render()
 	{
-		// Projection Matrix
-		const glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+		mClearColor = gGUIManager.GetClearColor();
+		mObjectColor = gGUIManager.GetObjectColor();
+		mCamera->SetPosition(gGUIManager.GetCameraPosition());
+		mCamera->SetRotation(gGUIManager.GetCameraPitch(), gGUIManager.GetCameraYaw());
 
-		// Camera Matrix
-		const glm::mat4 View = glm::lookAt(
-			mWorld,            // Camera is at (4,3,3), in World Space
-			mOrigin,           // and looks at the origin
-			glm::vec3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
-		);
+		// Model Matrix
+		static glm::mat4 ModelMatrix = translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -10.0));
 
-		// Model Matrix : an identity matrix (model will be at the origin)
-		const glm::mat4 Model = glm::mat4(1.0f);
-
-		// Model View Projection Matrix
-		const glm::mat4 MVPMatrix = Projection * View * Model;
-
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		mShader->SetUniformMat4f("u_MVP", MVPMatrix);
+		// Send our transformation to the currently bound shader
+		mShader->SetUniformMat4f("u_ProjectionMatrix", mCamera->GetProjectionMatrix());
+		mShader->SetUniformMat4f("u_ViewMatrix", mCamera->GetViewMatrix());
+		mShader->SetUniformMat4f("u_ModelMatrix", ModelMatrix);
 		mShader->SetUniform4f("u_Color", mObjectColor.x, mObjectColor.y, mObjectColor.z, mObjectColor.w);
-
-		// Triangle vertices
-		constexpr float Vertices[] = {-0.5, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
-		constexpr U32 Indices[] = {0, 1, 2, 2, 3, 0};
-
-		// Vertex Buffer Object
-		VertexBuffer VBO{};
-		VBO.Bind();
-		VBO.FillBuffer(Vertices, sizeof(Vertices));
-		VBO.AddVBElement<float>(3);
-
-		// Vertex Attribute Object
-		VertexArray VAO{};
-		VAO.Bind();
-		VAO.AddVBO(VBO);
-
-		// Index Buffer
-		IndexBuffer IB{};
-		IB.FillBuffer(Indices, 6);
-		IB.Bind();
 
 		// Rendering
 		ImGui::Render();
@@ -113,9 +194,9 @@ namespace CE
 		gGUIManager.SetDisplayHeight(Height);
 
 		glViewport(0, 0, Width, Height);
-		glClearColor(mClearColor.x, mClearColor.y, mClearColor.z, mClearColor.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, IB.GetCount(), GL_UNSIGNED_INT, nullptr);
+		glClearColor(mClearColor.x, mClearColor.y, mClearColor.z, mClearColor.w);
+		glDrawElements(GL_TRIANGLES, mIBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

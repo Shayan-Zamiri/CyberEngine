@@ -43,3 +43,15 @@ using Vector4D = Terathon::Vector4D;
 using Vector3D = Terathon::Vector3D;
 using Vector2D = Terathon::Vector2D;
 using Transform4D = Terathon::Transform4D;
+
+// ENUMS
+
+enum class EDirection
+{
+	FORWARD,
+	RIGHT,
+	BACKWARD,
+	LEFT,
+	UP,
+	DOWN
+};
