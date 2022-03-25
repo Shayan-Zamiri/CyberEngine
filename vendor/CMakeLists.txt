@@ -74,3 +74,20 @@ add_library(${IMGUI_LIB_NAME} STATIC ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 target_compile_definitions(${IMGUI_LIB_NAME} PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=1)
 
 target_include_directories(${IMGUI_LIB_NAME} PUBLIC ${IMGUI_INC_PATH} ${GLFW_INC_PATH} ${GLAD_INC_PATH})
+
+# stb 
+set(STB_LIB_NAME "stb")
+set(STB_SRC_PATH "${STB_LIB_NAME}/")
+set(STB_INC_PATH "${STB_LIB_NAME}/")
+
+add_library(stb INTERFACE)
+
+target_include_directories(${STB_LIB_NAME} INTERFACE "${STB_INC_PATH}")
+
+
+# assimp
+set(ASSIMP_LIB_NAME "assimp")
+set(ASSIMP_SRC_PATH "${ASSIMP_LIB_NAME}/")
+set(ASSIMP_INC_PATH "${ASSIMP_LIB_NAME}/include/")
+
+add_subdirectory(${ASSIMP_LIB_NAME})

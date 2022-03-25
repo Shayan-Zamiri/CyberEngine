@@ -1,0 +1,7 @@
+
+[*]
+
+# ReSharper properties
+resharper_align_first_arg_by_paren = true
+resharper_align_multiline_expression_braces = true
+resharper_use_continuous_line_indent_in_method_pars = true
