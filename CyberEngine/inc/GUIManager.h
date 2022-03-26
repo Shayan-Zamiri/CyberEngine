@@ -6,10 +6,11 @@
 
 #include "CETypes.h"
 #include "IManager.h"
-#include "glm/glm.hpp"
-#include "GLFW/glfw3.h"
+#include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
 
 struct ImGuiIO;
+struct GLFWwindow;
 
 namespace CE
 {
@@ -27,12 +28,11 @@ namespace CE
 
 		// FUNCTIONS
 	public:
+		static void GlFWErrorCallback(I32 pError, const char* pDescription);
+
 		void Draw();
 
 		bool GLFWWindowShouldClose() const;
-
-	private:
-		static void GlFWErrorCallback(I32 pError, const char* pDescription);
 
 		// GETTERS & SETTERS
 	public:

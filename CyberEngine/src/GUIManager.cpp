@@ -7,7 +7,9 @@
 #include "GUIManager.h"
 #include "Camera.h"
 #include "imgui.h"
+#include "InputManager.h"
 #include "glm/glm.hpp"
+#include "GLFW/glfw3.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
