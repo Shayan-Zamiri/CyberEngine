@@ -16,6 +16,7 @@ namespace CE
 	class IndexBuffer;
 	class Shader;
 	class Camera;
+	class Model;
 
 	class RenderManager : public IManager
 	{
@@ -45,12 +46,9 @@ namespace CE
 		const GLubyte* mOpenGLVersion;
 		std::unique_ptr<Shader> mShader;
 		std::unique_ptr<Camera> mCamera;
-		std::unique_ptr<VertexArray> mVAO;
-		std::unique_ptr<VertexBuffer> mVBO;
-		std::unique_ptr<IndexBuffer> mIBO;
+		std::unique_ptr<Model> mModel;
 		std::string mGLSLVersion;
 		glm::vec4 mClearColor;
-		glm::vec4 mObjectColor;
 	};
 
 	extern RenderManager gRenderManager;

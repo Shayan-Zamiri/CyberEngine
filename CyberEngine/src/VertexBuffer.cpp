@@ -4,6 +4,7 @@
 
 #include "CEPCH.h"
 #include "VertexBuffer.h"
+#include "Mesh.h"
 
 namespace CE
 {
@@ -16,7 +17,7 @@ namespace CE
 
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
-	VertexBuffer::VertexBuffer() : mRendererID{0}, mStride{0}
+	VertexBuffer::VertexBuffer() : mRendererID{0}, mSize{0}
 	{
 		glGenBuffers(1, &mRendererID);
 	}
@@ -28,10 +29,11 @@ namespace CE
 
 	// FUNCTIONS
 
-	void VertexBuffer::FillBuffer(const void* pData, GLsizei pSize)
+	void VertexBuffer::FillBuffer(const std::vector<Vertex>& pVertices)
 	{
-		mSize = pSize;
-		glNamedBufferData(mRendererID, pSize, pData, GL_STATIC_DRAW);
+		mCount = pVertices.size();
+		mSize = mCount * sizeof(Vertex);
+		glNamedBufferData(mRendererID, mSize, &pVertices[0], GL_STATIC_DRAW);
 	}
 
 	void VertexBuffer::Bind() const

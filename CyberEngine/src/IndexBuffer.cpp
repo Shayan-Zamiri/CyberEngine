@@ -21,11 +21,10 @@ namespace CE
 
 	// FUNCTIONS
 
-	void IndexBuffer::FillBuffer(const GLuint* pData, GLuint pCount)
+	void IndexBuffer::FillBuffer(const std::vector<GLuint>& pIndices)
 	{
-		mCount = pCount;
-		Bind();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pCount * sizeof(GLuint), pData,GL_STATIC_DRAW);
+		mCount = pIndices.size();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mCount * sizeof(GLuint), &pIndices[0],GL_STATIC_DRAW);
 	}
 
 	void IndexBuffer::Bind() const

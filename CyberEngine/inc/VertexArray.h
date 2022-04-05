@@ -10,6 +10,7 @@
 namespace CE
 {
 	class VertexBuffer;
+	class IndexBuffer;
 
 	class VertexArray
 	{
@@ -25,7 +26,7 @@ namespace CE
 
 		void Bind() const;
 
-		void AddVBO(const VertexBuffer& pVBO) const;
+		void AttachVBO(const VertexBuffer& pVBO) const;
 
 		// PROPERTIES
 	private:

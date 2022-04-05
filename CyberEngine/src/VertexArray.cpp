@@ -1,5 +1,7 @@
 #include "CEPCH.h"
 #include "VertexArray.h"
+
+#include "Mesh.h"
 #include "VertexBuffer.h"
 
 namespace CE
@@ -30,17 +32,21 @@ namespace CE
 		glBindVertexArray(mRendererID);
 	}
 
-	void VertexArray::AddVBO(const VertexBuffer& pVBO) const
+	void VertexArray::AttachVBO(const VertexBuffer& pVBO) const
 	{
-		Bind();
-		const auto& Elements = pVBO.GetElements();
-		GLuint Offset = 0;
-		for (GLuint i = 0; i < Elements.size(); i++)
-		{
-			glEnableVertexArrayAttrib(mRendererID, i);
-			glVertexAttribPointer(i, Elements[i].mCount, Elements[i].mType, Elements[i].mNormalized, pVBO.GetStride()
-			                    , reinterpret_cast<const void*>(Offset));
-			Offset += Elements[i].mCount * VertexBufferElement::GetSizeOfType(Elements[i].mType);
-		}
+		// Positions
+		glEnableVertexArrayAttrib(mRendererID, 0);
+		glVertexAttribPointer(0, 3,GL_FLOAT, GL_FALSE, sizeof(Vertex),
+		                      reinterpret_cast<void*>(0));
+
+		// Normals
+		glEnableVertexArrayAttrib(mRendererID, 1);
+		glVertexAttribPointer(1, 3,GL_FLOAT, GL_FALSE, sizeof(Vertex),
+		                      reinterpret_cast<void*>(offsetof(Vertex, mNormal)));
+
+		// Textures
+		glEnableVertexArrayAttrib(mRendererID, 2);
+		glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, sizeof(Vertex),
+		                      reinterpret_cast<void*>(offsetof(Vertex, mTexCoords)));
 	}
 }

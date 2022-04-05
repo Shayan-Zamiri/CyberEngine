@@ -8,6 +8,7 @@
 #include "GUIManager.h"
 #include "InputManager.h"
 #include "RenderManager.h"
+#include "InputManager.h"
 
 namespace CE
 {

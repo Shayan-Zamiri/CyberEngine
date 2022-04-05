@@ -1,10 +1,12 @@
 #version 460
 
-out vec4 v_Color;
+in vec2 v_TexCoords;
 
-uniform vec4 u_Color;
+out vec4 f_Color;
+
+uniform sampler2D texture_diffuse1;
 
 void main()
 {
-  v_Color = u_Color;
+  f_Color = texture(texture_diffuse1,v_TexCoords);
 }

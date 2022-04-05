@@ -7,6 +7,13 @@
 #include "CETypes.h"
 #include "IManager.h"
 
+struct aiScene;
+
+namespace Assimp
+{
+	class Importer;
+}
+
 namespace CE
 {
 	class FileManager : public IManager
@@ -15,15 +22,23 @@ namespace CE
 	public:
 		FileManager() = default;
 
-		virtual ~FileManager() = default;
+		virtual ~FileManager() override = default;
 
-		virtual void StartUp() override;
+		void StartUp() override;
 
-		virtual void ShutDown() override;
+		void ShutDown() override;
 
 		// FUNCTIONS
 	public:
 		static std::string FileToString(const std::string& pFilePath);
+
+		static U8* LoadImage(const std::string& pFilePath, I32& pOutWidth, I32& pOutHeight, I32& pChannels);
+
+		static const aiScene* LoadAssimpScene(const std::string& pFilePath);
+
+		static void FreeLastAssimpScene();
+
+		static Assimp::Importer sAssimpImporter;
 	};
 
 	extern FileManager gFileManager;

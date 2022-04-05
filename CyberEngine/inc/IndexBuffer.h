@@ -15,11 +15,11 @@ namespace CE
 		//CTOR & DTOR
 		IndexBuffer();
 
-		~IndexBuffer();
+		virtual ~IndexBuffer();
 
 		//FUNCTIONS
 	public:
-		void FillBuffer(const GLuint* pData, GLuint pCount);
+		void FillBuffer(const std::vector<GLuint>& pIndices);
 
 		void Bind() const;
 
@@ -27,11 +27,11 @@ namespace CE
 
 		//GETTERS & SETTERS
 	public:
-		GLuint GetCount() const { return mCount; }
+		GLsizei GetCount() const { return mCount; }
 
 		//PROPERTIES
 	private:
 		GLuint mRendererID;
-		GLuint mCount;
+		GLsizei mCount;
 	};
 }

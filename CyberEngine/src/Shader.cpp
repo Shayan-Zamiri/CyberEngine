@@ -58,20 +58,22 @@ namespace CE
 			GLsizei Length;
 			glGetShaderiv(VSResult, GL_INFO_LOG_LENGTH, &Length);
 			// alloca(): allocate memory in this function stack
-			GLchar* Message = static_cast<char*>(alloca(Length * sizeof(GLchar)));
+			GLchar* Message = static_cast<GLchar*>(malloc(Length * sizeof(GLchar)));
 			glGetShaderInfoLog(VSResult, Length, &Length, Message);
 			spdlog::error("Failed to compile Vertex Shader: {}", Message);
 			glDeleteShader(VSResult);
+			free(Message);
 		}
 
 		if (FSResult != GL_TRUE)
 		{
 			GLsizei Length;
 			glGetShaderiv(FSResult, GL_INFO_LOG_LENGTH, &Length);
-			GLchar* Message = static_cast<char*>(alloca(Length * sizeof(GLchar)));
+			GLchar* Message = static_cast<GLchar*>(malloc(Length * sizeof(GLchar)));
 			glGetShaderInfoLog(FSResult, Length, &Length, Message);
 			spdlog::error("Failed to compile Fragment Shader: {}", Message);
 			glDeleteShader(FSResult);
+			free(Message);
 		}
 	}
 
@@ -88,11 +90,12 @@ namespace CE
 		if (Result != GL_TRUE)
 		{
 			GLsizei Length;
-			glGetProgramiv(Result, GL_INFO_LOG_LENGTH, &Length);
-			GLchar* Message = static_cast<char*>(alloca(Length * sizeof(GLchar)));
-			glGetProgramInfoLog(mShaderProgram, Length, &Length, Message);
+			glGetProgramiv(mShaderProgram, GL_INFO_LOG_LENGTH, &Length);
+			GLchar* Message = static_cast<GLchar*>(malloc(Length * sizeof(GLchar)));
+			glGetProgramInfoLog(mShaderProgram, Length * sizeof(GLchar), &Length, Message);
 			spdlog::error("Failed to link program: {}", Message);
 			glDeleteProgram(mShaderProgram);
+			free(Message);
 		}
 
 		glValidateProgram(mShaderProgram);

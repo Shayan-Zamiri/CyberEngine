@@ -44,8 +44,6 @@ namespace CE
 
 		const glm::vec4& GetClearColor() const { return mClearColor; }
 
-		const glm::vec4& GetObjectColor() const { return mObjectColor; }
-
 		const glm::vec3& GetCameraPosition() const { return mCameraPosition; }
 
 		float GetCameraPitch() const { return mCameraPitch; }
@@ -61,7 +59,6 @@ namespace CE
 
 		// Visible Properties
 		glm::vec4 mClearColor;
-		glm::vec4 mObjectColor;
 		glm::vec3 mCameraPosition;
 		float mCameraPitch;
 		float mCameraYaw;
