@@ -199,6 +199,8 @@ namespace CE
 
 		static void SetMouseRawMotionInputMode(bool pRawMotion);
 
+		static void SetCursorPos(double pX, double pY);
+
 		// GETTERS & SETTERS
 	public:
 		// PROPERTIES

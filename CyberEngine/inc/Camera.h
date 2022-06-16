@@ -23,6 +23,8 @@ namespace CE
 	public:
 		glm::mat4 GetViewMatrix();
 
+		void Update(float pDeltaTime);
+
 	private:
 		void UpdateDirectionVectors();
 
@@ -36,9 +38,10 @@ namespace CE
 
 		// PROPERTIES
 	public:
-		/** Pitch,Yaw,Roll */
 		static constexpr glm::vec3 sDefaultWorldUp{0.0f, 1.0f, 0.0f};
 		static constexpr float sDefaultYaw{-90.0f};
+		static constexpr float sDefaultRotationSpeed{10.0f};
+		static constexpr float sDefaultMoveSpeed{10.0f};
 		static constexpr float sDefaultFOV{60.0f};
 		static constexpr float sDefaultAspectRatio{1920.0f / 1080.0f};
 		static constexpr float sDefaultNear{0.1f};
@@ -49,6 +52,8 @@ namespace CE
 
 		float mPitch;
 		float mYaw;
+		float mRotationSpeed;
+		float mMoveSpeed;
 
 		glm::vec3 mForward;
 		glm::vec3 mRight;

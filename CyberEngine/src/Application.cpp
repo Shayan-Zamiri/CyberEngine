@@ -8,7 +8,7 @@
 #include "GUIManager.h"
 #include "InputManager.h"
 #include "RenderManager.h"
-#include "InputManager.h"
+#include <chrono>
 
 namespace CE
 {
@@ -30,10 +30,18 @@ namespace CE
 		gInputManager.StartUp();
 		gRenderManager.StartUp();
 
+		std::chrono::time_point<std::chrono::high_resolution_clock> prevTime =
+			std::chrono::high_resolution_clock::now();
+
 		while (!gGUIManager.GLFWWindowShouldClose())
 		{
+			std::chrono::time_point<std::chrono::high_resolution_clock> newTime =
+				std::chrono::high_resolution_clock::now();
+			std::chrono::duration<float> deltaTime = newTime - prevTime;
+			prevTime = newTime;
+
 			gGUIManager.Draw();
-			gRenderManager.Render();
+			gRenderManager.Render(deltaTime.count());
 		}
 
 		gRenderManager.ShutDown();

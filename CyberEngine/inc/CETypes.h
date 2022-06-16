@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "TSMatrix4D.h"
+#include "TSQuaternion.h"
 
 namespace CE
 {
@@ -45,6 +46,7 @@ namespace CE
 	using Vector3D = Terathon::Vector3D;
 	using Vector2D = Terathon::Vector2D;
 	using Transform4D = Terathon::Transform4D;
+	using Quaternion = Terathon::Quaternion;
 
 	// ENUMS
 

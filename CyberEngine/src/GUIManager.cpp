@@ -3,16 +3,13 @@
  * You should have received a copy of the MIT license with this file. */
 
 #include "CEPCH.h"
-#include "RenderManager.h"
 #include "GUIManager.h"
 #include "Camera.h"
 #include "imgui.h"
-#include "InputManager.h"
 #include "glm/glm.hpp"
 #include "GLFW/glfw3.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "InputManager.h"
 
 namespace CE
 {
@@ -105,10 +102,6 @@ namespace CE
 			ImGui::Begin("Setup background color"); // Create a window called "Hello, world!" and append into it.
 
 			ImGui::ColorEdit4("Clear Color", reinterpret_cast<float*>(&mClearColor));
-			ImGui::DragFloat3("Camera Position:", &mCameraPosition[0]);
-			ImGui::DragFloat("Camera Pitch:", &mCameraPitch, 0.5f, -90.0f, 90.0f);
-			ImGui::DragFloat("Camera Yaw:", &mCameraYaw, 0.5f, 360.0f, 360.0f);
-
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate
 			          , ImGui::GetIO().Framerate);
 			ImGui::End();

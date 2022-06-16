@@ -77,11 +77,12 @@ namespace CE
 		mModel->SetupMeshesTextures(*mShader);
 	};
 
-	void RenderManager::Render()
+	void RenderManager::Render(float pDeltaTime)
 	{
 		mClearColor = gGUIManager.GetClearColor();
-		mCamera->SetPosition(gGUIManager.GetCameraPosition());
-		mCamera->SetRotation(gGUIManager.GetCameraPitch(), gGUIManager.GetCameraYaw());
+		//mCamera->SetPosition(gGUIManager.GetCameraPosition());
+		//mCamera->SetRotation(gGUIManager.GetCameraPitch(), gGUIManager.GetCameraYaw());
+		mCamera->Update(pDeltaTime);
 
 		// Model Matrix
 		static glm::mat4 ModelMatrix = translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -10.0));

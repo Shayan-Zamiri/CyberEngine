@@ -13,7 +13,6 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
-#include "assimp/Importer.hpp"
 
 namespace CE
 {
@@ -39,9 +38,9 @@ namespace CE
 		return Content;
 	}
 
-	U8* FileManager::LoadImage(const std::string& pFilePath, I32& pOutWidth, I32& pOutHeight, I32& pChannels)
+	U8* FileManager::LoadImage(const std::string& pFilePath, I32& pOutWidth, I32& pOutHeight, I32& pOutChannels)
 	{
-		GLubyte* Data = stbi_load(pFilePath.c_str(), &pOutWidth, &pOutHeight, &pChannels, 0);
+		GLubyte* Data = stbi_load(pFilePath.c_str(), &pOutWidth, &pOutHeight, &pOutChannels, 0);
 		return Data;
 	}
 

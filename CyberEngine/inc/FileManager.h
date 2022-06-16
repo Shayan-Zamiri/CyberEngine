@@ -32,7 +32,7 @@ namespace CE
 	public:
 		static std::string FileToString(const std::string& pFilePath);
 
-		static U8* LoadImage(const std::string& pFilePath, I32& pOutWidth, I32& pOutHeight, I32& pChannels);
+		static U8* LoadImage(const std::string& pFilePath, I32& pOutWidth, I32& pOutHeight, I32& pOutChannels);
 
 		static const aiScene* LoadAssimpScene(const std::string& pFilePath);
 

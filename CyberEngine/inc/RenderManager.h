@@ -32,7 +32,7 @@ namespace CE
 
 		// FUNCTIONS
 	public:
-		void Render();
+		void Render(float pDeltaTime);
 
 		// GETTERS & SETTERS
 	public:

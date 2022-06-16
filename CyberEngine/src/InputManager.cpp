@@ -42,6 +42,11 @@ namespace CE
 		}
 	}
 
+	void InputManager::SetCursorPos(double pX, double pY)
+	{
+		glfwSetCursorPos(gGUIManager.GetGLFWWindow(), pX, pY);
+	}
+
 	// CTOR/DTOR & VIRTUAL FUNCTIONS
 
 	InputManager::InputManager()
@@ -60,7 +65,7 @@ namespace CE
 		glfwSetMouseButtonCallback(gGUIManager.GetGLFWWindow(), GLFWSetMouseButtonCallback);
 		glfwSetScrollCallback(gGUIManager.GetGLFWWindow(), GLFWSetScrollCallback);
 
-		SetMouseRawMotionInputMode(true);
+		SetMouseRawMotionInputMode(false);
 	}
 
 	void InputManager::ShutDown() { }

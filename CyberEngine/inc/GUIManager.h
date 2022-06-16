@@ -42,6 +42,10 @@ namespace CE
 
 		void SetDisplayHeight(I32 pDisplayHeight) { mDisplayHeight = pDisplayHeight; }
 
+		I32 GetDisplayWidth() const { return mDisplayWidth; }
+
+		I32 GetDisplayHeight() const { return mDisplayHeight; }
+
 		const glm::vec4& GetClearColor() const { return mClearColor; }
 
 		const glm::vec3& GetCameraPosition() const { return mCameraPosition; }
