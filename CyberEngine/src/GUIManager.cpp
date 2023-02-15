@@ -49,8 +49,8 @@ namespace CE
 		}
 		glfwMakeContextCurrent(mGLFWWindow);
 
-		// Enable vsync
-		glfwSwapInterval(1);
+		// Disable vsync
+		glfwSwapInterval(0);
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
