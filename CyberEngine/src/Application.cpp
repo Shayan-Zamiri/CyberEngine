@@ -9,7 +9,6 @@
 #include "InputManager.h"
 #include "RenderManager.h"
 #include <chrono>
-#include "optick.h"
 
 namespace CE
 {

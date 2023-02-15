@@ -18,6 +18,7 @@ namespace CE
 
 	void Model::Draw() const
 	{
+		OPTICK_EVENT("Model::Draw");
 		for (size_t i = 0; i < mMeshes.size(); i++)
 		{
 			mMeshes[i].Draw();

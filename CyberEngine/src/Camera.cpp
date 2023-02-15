@@ -65,6 +65,7 @@ namespace CE
 
 	void Camera::Update(float pDeltaTime)
 	{
+		OPTICK_EVENT("Camera::Update");
 		static double xPos, yPos = 0;
 		const double prevX = xPos;
 		const double prevY = yPos;

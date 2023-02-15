@@ -79,6 +79,7 @@ namespace CE
 
 	void RenderManager::Render(float pDeltaTime)
 	{
+		OPTICK_EVENT("RenderManager::Render");
 		mClearColor = gGUIManager.GetClearColor();
 		//mCamera->SetPosition(gGUIManager.GetCameraPosition());
 		//mCamera->SetRotation(gGUIManager.GetCameraPitch(), gGUIManager.GetCameraYaw());

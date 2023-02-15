@@ -74,6 +74,7 @@ namespace CE
 
 	void Mesh::Draw() const
 	{
+		OPTICK_EVENT("Mesh::Draw");
 		mVAO->Bind();
 		glDrawElements(GL_TRIANGLES, mIBO->GetCount(), GL_UNSIGNED_INT, nullptr);
 
