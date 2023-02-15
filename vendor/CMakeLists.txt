@@ -91,3 +91,39 @@ set(ASSIMP_SRC_PATH "${ASSIMP_LIB_NAME}/")
 set(ASSIMP_INC_PATH "${ASSIMP_LIB_NAME}/include/")
 
 add_subdirectory(${ASSIMP_LIB_NAME})
+
+# optick
+set(OPTICK_LIB_NAME "optick")
+set(OPTICK_SRC_PATH "${OPTICK_LIB_NAME}/src/")
+set(OPTICK_INC_PATH "${OPTICK_LIB_NAME}/include/")
+
+add_library(optick STATIC 
+    ${OPTICK_SRC_PATH}optick_capi.cpp
+    ${OPTICK_SRC_PATH}optick_core.cpp
+    ${OPTICK_SRC_PATH}optick_gpu.cpp
+    ${OPTICK_SRC_PATH}optick_gpu.d3d12.cpp
+    ${OPTICK_SRC_PATH}optick_gpu.vulkan.cpp
+    ${OPTICK_SRC_PATH}optick_message.cpp
+    ${OPTICK_SRC_PATH}optick_miniz.cpp
+    ${OPTICK_SRC_PATH}optick_serialization.cpp
+    ${OPTICK_SRC_PATH}optick_server.cpp
+    ${OPTICK_SRC_PATH}optick.config.h
+    ${OPTICK_SRC_PATH}optick.h
+    ${OPTICK_SRC_PATH}optick_capi.h
+    ${OPTICK_SRC_PATH}optick_common.h
+    ${OPTICK_SRC_PATH}optick_core.freebsd.h
+    ${OPTICK_SRC_PATH}optick_core.linux.h
+    ${OPTICK_SRC_PATH}optick_core.macos.h
+    ${OPTICK_SRC_PATH}optick_core.platform.h
+    ${OPTICK_SRC_PATH}optick_core.win.h
+    ${OPTICK_SRC_PATH}optick_gpu.h
+    ${OPTICK_SRC_PATH}optick_memory.h
+    ${OPTICK_SRC_PATH}optick_message.h
+    ${OPTICK_SRC_PATH}optick_miniz.h
+    ${OPTICK_SRC_PATH}optick_serialization.h
+    ${OPTICK_SRC_PATH}optick_server.h
+)
+
+target_include_directories(${OPTICK_LIB_NAME} PUBLIC ${OPTICK_INC_PATH})
+
+target_compile_definitions(optick PUBLIC OPTICK_ENABLE_GPU_VULKAN=0)

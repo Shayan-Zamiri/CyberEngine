@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "RenderManager.h"
 #include <chrono>
+#include "optick.h"
 
 namespace CE
 {
@@ -35,6 +36,7 @@ namespace CE
 
 		while (!gGUIManager.GLFWWindowShouldClose())
 		{
+			OPTICK_FRAME("MainThread");
 			std::chrono::time_point<std::chrono::high_resolution_clock> newTime =
 				std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> deltaTime = newTime - prevTime;
